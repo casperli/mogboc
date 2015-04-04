@@ -1,5 +1,5 @@
 exports.render = index;
 
 function index(req, res) {
-    res.send('Hello from the index controller');
+    res.render('index', {title: 'Hello from the index template model'});
 };
