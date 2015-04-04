@@ -25,12 +25,12 @@
   },
   "homepage": "https://github.com/casperli/mogboc",
   "dependencies": {
-    "body-parser": "^1.12.2",       // middleware for parsing requests
-    "compression": "^1.4.3",        // middleware for HTTP compression
-    "ejs": "^2.3.1",                // templating engine for server side rendering
-    "express": "^4.12.3",           // framework
-    "method-override": "^2.3.2",    // middleware for adjusting HTTP methods
-    "morgan": "^1.5.2",             // middleware for logging requests
-    "sqlite3": "^3.0.5"             // sqllite database access
+    "body-parser": "^1.12.2",
+    "compression": "^1.4.3",
+    "ejs": "^2.3.1",
+    "express": "^4.12.3",
+    "method-override": "^2.3.2",
+    "morgan": "^1.5.2",
+    "sqlite3": "^3.0.5"
   }
 }
