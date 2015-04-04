@@ -1,0 +1,31 @@
+{
+  "name": "mogboc",
+  "version": "0.1.0",
+  "description": "A vehicle computer for an Unimog 406 (UniMOG BOrd Computer)",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casperli/mogboc.git"
+  },
+  "keywords": [
+    "Unimog",
+    "vehicle",
+    "computer",
+    "node.js",
+    "angularjs",
+    "raspberrypi"
+  ],
+  "author": "Andreas Caspers, Martina Eckmann",
+  "license": "GPL",
+  "bugs": {
+    "url": "https://github.com/casperli/mogboc/issues"
+  },
+  "homepage": "https://github.com/casperli/mogboc",
+  "dependencies": {
+    "express": "^4.12.3",
+    "morgan": "^1.5.2"
+  }
+}
