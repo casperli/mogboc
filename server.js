@@ -1,6 +1,8 @@
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+"use strict";
 
-var express = require('./config/express');
+process.env.NODE_ENV = process.env.NODE_ENV || "development";
+
+var express = require("./config/express");
 var app = express();
 
 app.listen(3000);
@@ -29,7 +31,8 @@ console.log("MogBoC server is running at http://localhost:3000");
 //
 //db.close();
 
-process.on('SIGINT', function () {
-    console.log('Exiting MogBoC server');
+process.on("SIGINT", function () {
+    console.log("Exiting MogBoC server");
+    //noinspection Eslint
     process.exit();
 });
