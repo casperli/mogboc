@@ -2,6 +2,9 @@
 logs
 *.log
 
+# Database files (SQLite)
+*.db
+
 # Runtime data
 pids
 *.pid
