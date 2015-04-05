@@ -3,7 +3,7 @@
 var mainAppModuleName = "mogboc";
 
 //noinspection Eslint
-var mainAppModule = angular.module(mainAppModuleName, []);
+var mainAppModule = angular.module(mainAppModuleName, ["cockpit"]);
 
 angular.element(document).ready(function () {
     angular.bootstrap(document, [mainAppModuleName]);

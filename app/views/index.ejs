@@ -4,10 +4,24 @@
     <title><%= title %></title>
 </head>
 <body>
+
+<!--Try to get rid oj jQuery asap. ATM the highcharts lib does work only with jQuery and NOT with internal lib-->
+<script type="text/javascript" src="/lib/jquery/dist/jquery.js"></script>
+<!--<script src="/lib/highcharts-release/adapters/standalone-framework.js"></script>-->
+
+<script src="/lib/highcharts-release/highcharts.js"></script>
+<script src="/lib/highcharts-release/highcharts-more.js"></script>
+<script src="/lib/highcharts-release/modules/exporting.js"></script>
+
 <img src="img/mog406.png" alt="Mog" height="100" />
 <h1><%= title %></h1>
 
+<section ng-include="'cockpit/views/cockpit.client.view.html'"></section>
+
 <script type="text/javascript" src="/lib/angular/angular.js"></script>
 <script type="text/javascript" src="/app.js"></script>
+<script type="text/javascript" src="/cockpit/cockpit.client.module.js"></script>
+<script type="text/javascript" src="/lib/highcharts-ng/dist/highcharts-ng.min.js"></script>
+
 </body>
 </html>
