@@ -1,19 +1,33 @@
 "use strict";
 
-var cockpit = angular.module("cockpit", ["highcharts-ng"]);
+var cockpit = angular.module("cockpit");
 
-cockpit.controller("CockpitController", function () {
+cockpit.controller("CockpitController", ["CurrentMachineValues", function (CurrentMachineValues) {
 
     var vm = this;
+    vm.rpm = 0;
+    vm.currentGear = 0;
 
-    function update() {
-        var value = parseInt(vm.rpm);
-        vm.tachoConfig.getHighcharts().series[0].points[0].update(value, true, {"duration": 500});
+    var currentValues = {
+        "rpm": 0,
+        "gear": 0,
+        "speed": 0
     }
 
-    vm.rpm = 500;
-    vm.update = update;
-    vm.currentGear = 2;
+    function update() {
+        currentValues = CurrentMachineValues.get(function () {
+            vm.rpm = currentValues.rpm;
+            vm.currentGear = currentValues.gear;
+            var value = parseInt(vm.rpm);
+            vm.tachoConfig.getHighcharts().series[0].points[0].update(value, true, {"duration": 500});
+        });
+    }
+
+    function setNewValues() {
+        CurrentMachineValues.set(currentValues);
+    }
+
+    vm.update = setNewValues;
     vm.tachoConfig = {
         options: {
             chart: {
@@ -231,4 +245,6 @@ cockpit.controller("CockpitController", function () {
             }
         }]
     };
-});
+
+    update();
+}]);
