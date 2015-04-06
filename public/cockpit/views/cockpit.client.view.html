@@ -1,6 +1,6 @@
 <section ng-controller="CockpitController as vm">
     <label for="rpm">Rounds per minute (rpm)</label>
-    <input type="text" id="rpm" ng-model="vm.rpm">
+    <input type="text" id="rpm" ng-model="vm.currentValues.rpm">
     <input type="button" id="update" ng-click="vm.update()" value="Update">
 
     <div>Current gear:</div>

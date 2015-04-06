@@ -4,10 +4,13 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
+var rpm = getRandomInt(400, 2551);
+var gear = getRandomInt(1, 5);
+
 exports.currentMachineValues = function (req, res, next) {
     var values = {
-        "rpm": getRandomInt(400, 2551),
-        "gear": getRandomInt(1, 5),
+        "rpm": rpm,
+        "gear": gear,
         "speed": 40
     };
 
@@ -15,5 +18,11 @@ exports.currentMachineValues = function (req, res, next) {
 };
 
 exports.setRpmAndGear = function (req, res, next) {
-    console.log("Setting machine values: " + JSON.stringify(req.body, null, 4));
+    rpm = req.body.rpm;
+    gear= req.body.gear;
+
+    res.send();
+    //console.log("Setting machine values: " + JSON.stringify(req.body, null, 4));
+
+    // Save value to sqlite (every 10 seconds?) -> cron job (node-cron)
 };

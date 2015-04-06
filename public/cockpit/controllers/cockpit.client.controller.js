@@ -5,26 +5,23 @@ var cockpit = angular.module("cockpit");
 cockpit.controller("CockpitController", ["CurrentMachineValues", function (CurrentMachineValues) {
 
     var vm = this;
-    vm.rpm = 0;
-    vm.currentGear = 0;
 
-    var currentValues = {
+    vm.currentValues = {
         "rpm": 0,
         "gear": 0,
         "speed": 0
-    }
+    };
 
     function update() {
-        currentValues = CurrentMachineValues.get(function () {
-            vm.rpm = currentValues.rpm;
-            vm.currentGear = currentValues.gear;
-            var value = parseInt(vm.rpm);
+        vm.currentValues = CurrentMachineValues.get(function () {
+            var value = parseInt(vm.currentValues.rpm);
             vm.tachoConfig.getHighcharts().series[0].points[0].update(value, true, {"duration": 500});
         });
     }
 
     function setNewValues() {
-        CurrentMachineValues.set(currentValues);
+        CurrentMachineValues.set(vm.currentValues);
+        update();
     }
 
     vm.update = setNewValues;
@@ -130,7 +127,7 @@ cockpit.controller("CockpitController", ["CurrentMachineValues", function (Curre
 
         series: [{
             name: "Rounds per minute",
-            data: [vm.rpm],
+            data: [0],
             tooltip: {
                 valueSuffix: " rpm"
             }
@@ -239,7 +236,7 @@ cockpit.controller("CockpitController", ["CurrentMachineValues", function (Curre
 
         series: [{
             name: "Rounds per minute",
-            data: [vm.rpm],
+            data: [0],
             tooltip: {
                 valueSuffix: " rpm"
             }
