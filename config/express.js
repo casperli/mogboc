@@ -1,6 +1,9 @@
 "use strict";
 
-var express = require("express"),
+var config = require("./config"),
+    http = require("http"),
+    socketio = require("socket.io"),
+    express = require("express"),
     morgan = require("morgan"),
     compress = require("compression"),
     bodyParser = require("body-parser"),
@@ -10,6 +13,8 @@ var express = require("express"),
 
 module.exports = function () {
     var app = express();
+    var server = http.createServer(app);
+    var io = socketio.listen(server);
 
     if (process.env.NODE_ENV === "development") {
         app.use(morgan("dev"));
@@ -35,5 +40,7 @@ module.exports = function () {
     require("../app/routes/machinevalues.server.routes.js")(app);
 
     app.use(express.static("./public"));
-    return app;
+
+    require("./socketio")(server, io);
+    return server;
 }
