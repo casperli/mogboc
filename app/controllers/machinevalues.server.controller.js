@@ -1,27 +1,39 @@
 "use strict";
 
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-}
-
 var values = {
-    "rpm": getRandomInt(400, 2551),
-    "gear": getRandomInt(1, 5),
-    "speed": 40
+    "rpm": 0,
+    "gear": 0,
+    "speed": 0
 };
+
+var gearRpmSpeedMultiplicators = [];
+gearRpmSpeedMultiplicators[0] = 0.005882353;
+gearRpmSpeedMultiplicators[1] = 0.011764706;
+gearRpmSpeedMultiplicators[2] = 0.021568627;
+gearRpmSpeedMultiplicators[3] = 0.028627451;
 
 exports.currentMachineValues = function (req, res, next) {
     res.send(values);
 };
 
-exports.setRpmAndGear = function (req, res, next) {
-    values.rpm = req.body.rpm;
-    values.gear = req.body.gear;
+exports.setRpmAndGear = function (io) {
+    return function (req, res, next) {
+        values.rpm = req.body.rpm;
+        values.gear = req.body.gear;
+        values.speed = values.rpm * gearRpmSpeedMultiplicators[values.gear];
 
-    res.send();
-    //console.log("Setting machine values: " + JSON.stringify(req.body, null, 4));
+        var message = {};
+        message.type = "machineValueUpdate";
+        message.text = "New machine values";
+        message.created = Date.now();
+        message.machineValues = values;
 
-    // Save value to sqlite (every 10 seconds?) -> cron job (node-cron)
+        io.emit("valueUpdate", message);
+
+        res.send();
+
+        // Save value to sqlite (every 10 seconds?) -> cron job (node-cron)
+    };
 };
 
 exports.initValueUpdateMessages = function (io, socket) {
@@ -32,13 +44,15 @@ exports.initValueUpdateMessages = function (io, socket) {
         machineValues: values
     });
 
-    socket.on("valueUpdate", function (message) {
-        message.type = "machineValueUpdate";
-        message.text = "New machine values";
-        message.created = Date.now();
+    console.log("Socket connected");
 
-        io.emit("valueUpdate", message);
-    });
+    //socket.on("valueUpdate", function (message) {
+    //    message.type = "machineValueUpdate";
+    //    message.text = "New machine values";
+    //    message.created = Date.now();
+    //
+    //    io.emit("valueUpdate", message);
+    //});
 
     socket.on("disconnect", function () {
         io.emit("valueUpdateMessage", {

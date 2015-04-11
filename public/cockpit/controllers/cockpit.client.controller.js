@@ -2,7 +2,7 @@
 
 var cockpit = angular.module("cockpit");
 
-cockpit.controller("CockpitController", ["CurrentMachineValues", function (CurrentMachineValues) {
+cockpit.controller("CockpitController", ["CurrentMachineValues", "Socket", "$scope", function (CurrentMachineValues, Socket, $scope) {
 
     var vm = this;
 
@@ -12,16 +12,44 @@ cockpit.controller("CockpitController", ["CurrentMachineValues", function (Curre
         "speed": 0
     };
 
-    function update() {
+    vm.messages = [];
+
+    Socket.on("valueUpdate", valueUpdateReceived);
+
+    function valueUpdateReceived(valueUpdate) {
+        vm.currentValues.rpm = parseInt(valueUpdate.machineValues.rpm);
+        vm.currentValues.gear = parseInt(valueUpdate.machineValues.gear);
+        vm.currentValues.speed = parseInt(valueUpdate.machineValues.speed);
+
+        vm.tachoConfig.getHighcharts().series[0].points[0].update(vm.currentValues.rpm, true, {"duration": 500});
+        vm.speedoConfig.getHighcharts().series[0].points[0].update(vm.currentValues.speed, true, {"duration": 500});
+    }
+
+    $scope.$on("$destroy", removeMachineUpdateListener);
+
+    function removeMachineUpdateListener() {
+        Socket.removeListener("valueUpdate");
+    }
+
+    function loadMachineValues() {
         vm.currentValues = CurrentMachineValues.get(function () {
             var value = parseInt(vm.currentValues.rpm);
             vm.tachoConfig.getHighcharts().series[0].points[0].update(value, true, {"duration": 500});
         });
     }
 
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
     function setNewValues() {
-        CurrentMachineValues.set(vm.currentValues);
-        update();
+
+        var newValues = {
+            "rpm": getRandomInt(400, 2551),
+            "gear": getRandomInt(1, 5)
+        };
+
+        CurrentMachineValues.set(newValues);
     }
 
     vm.update = setNewValues;
@@ -180,7 +208,7 @@ cockpit.controller("CockpitController", ["CurrentMachineValues", function (Curre
             },
             yAxis: {
                 min: 0,
-                max: 2800,
+                max: 100,
 
                 minorTickInterval: "auto",
                 minorTickWidth: 1,
@@ -200,23 +228,23 @@ cockpit.controller("CockpitController", ["CurrentMachineValues", function (Curre
                 title: {
                     text: "rpm"
                 },
-                plotBands: [{
-                    from: 0,
-                    to: 500,
-                    color: "#DDDF0D" // yellow
-                }, {
-                    from: 500,
-                    to: 2300,
-                    color: "#55BF3B" // green
-                }, {
-                    from: 2300,
-                    to: 2550,
-                    color: "#DDDF0D" // yellow
-                }, {
-                    from: 2550,
-                    to: 2800,
-                    color: "#DF5353" // red
-                }]
+                //plotBands: [{
+                //    from: 0,
+                //    to: 500,
+                //    color: "#DDDF0D" // yellow
+                //}, {
+                //    from: 500,
+                //    to: 2300,
+                //    color: "#55BF3B" // green
+                //}, {
+                //    from: 2300,
+                //    to: 2550,
+                //    color: "#DDDF0D" // yellow
+                //}, {
+                //    from: 2550,
+                //    to: 2800,
+                //    color: "#DF5353" // red
+                //}]
             },
             plotOptions: {
                 gauge: {
@@ -231,17 +259,17 @@ cockpit.controller("CockpitController", ["CurrentMachineValues", function (Curre
         },
 
         title: {
-            text: "Tachometer (rpm)"
+            text: "Speedometer (km/h)"
         },
 
         series: [{
-            name: "Rounds per minute",
+            name: "Kilometers per hour",
             data: [0],
             tooltip: {
-                valueSuffix: " rpm"
+                valueSuffix: " km/h"
             }
         }]
     };
 
-    update();
+    loadMachineValues();
 }]);
