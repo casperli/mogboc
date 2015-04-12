@@ -2,9 +2,8 @@
     <label for="rpm">Rounds per minute (rpm)</label>
     <input type="text" id="rpm" ng-model="vm.currentValues.rpm">
     <input type="button" id="update" ng-click="vm.update()" value="Update">
-
-    <div>Current gear:</div>
-    <div>{{vm.currentGear}}</div>
+s
+    <div>Current gear: {{vm.currentValues.gear}}</div>
     <highchart id="speed" config="vm.speedoConfig"
                style="min-width: 310px; max-width: 500px; height: 300px; margin: 0 auto; display: inline-block"/>
     <highchart id="engineSpeed" config="vm.tachoConfig"

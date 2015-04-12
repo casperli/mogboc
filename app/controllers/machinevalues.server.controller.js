@@ -20,7 +20,7 @@ exports.setRpmAndGear = function (io) {
     return function (req, res, next) {
         values.rpm = req.body.rpm;
         values.gear = req.body.gear;
-        values.speed = values.rpm * gearRpmSpeedMultiplicators[values.gear];
+        values.speed = values.rpm * gearRpmSpeedMultiplicators[values.gear - 1];
 
         var message = {};
         message.type = "machineValueUpdate";
@@ -45,14 +45,6 @@ exports.initValueUpdateMessages = function (io, socket) {
     });
 
     console.log("Socket connected");
-
-    //socket.on("valueUpdate", function (message) {
-    //    message.type = "machineValueUpdate";
-    //    message.text = "New machine values";
-    //    message.created = Date.now();
-    //
-    //    io.emit("valueUpdate", message);
-    //});
 
     socket.on("disconnect", function () {
         io.emit("valueUpdateMessage", {
