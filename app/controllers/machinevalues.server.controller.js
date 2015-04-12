@@ -1,5 +1,7 @@
 "use strict";
 
+var broadcaster = require("./machinevalues.server.socket");
+
 var values = {
     "rpm": 0,
     "gear": 0,
@@ -22,36 +24,10 @@ exports.setRpmAndGear = function (io) {
         values.gear = req.body.gear;
         values.speed = values.rpm * gearRpmSpeedMultiplicators[values.gear - 1];
 
-        var message = {};
-        message.type = "machineValueUpdate";
-        message.text = "New machine values";
-        message.created = Date.now();
-        message.machineValues = values;
-
-        io.emit("valueUpdate", message);
+        broadcaster.broadcastValueUpdate(io, values);
 
         res.send();
 
         // Save value to sqlite (every 10 seconds?) -> cron job (node-cron)
     };
 };
-
-exports.initValueUpdateMessages = function (io, socket) {
-    io.emit("valueUpdate", {
-        type: "status",
-        text: "connected",
-        created: Date.now(),
-        machineValues: values
-    });
-
-    console.log("Socket connected");
-
-    socket.on("disconnect", function () {
-        io.emit("valueUpdateMessage", {
-            type: "status",
-            text: "connected",
-            created: Date.now(),
-            machineValues: values
-        });
-    });
-}
